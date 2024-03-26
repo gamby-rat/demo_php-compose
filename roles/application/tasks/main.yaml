@@ -1,0 +1,11 @@
+---
+- name: Copy Docker Compose files to remote host
+  ansible.builtin.copy:
+    src: php_app/ 
+    dest: /home/vagrant/php_app
+
+- name: Run Docker Compose
+  ansible.builtin.command: "docker-compose up -d"
+  args:
+    chdir: /home/vagrant/php_app 
+  become: yes

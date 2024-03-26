@@ -1,0 +1,21 @@
+---
+    - name: Ensure SSH directory exists
+      file:
+        path: "~/.ssh"
+        state: directory
+        mode: "0700"
+
+    - name: Copy publick key
+      authorized_key:
+        user: "{{ ansible_user }}"
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        state: present
+
+    - name: Add vagrant to sudoers with no password
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: "^{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL"
+        line: "{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL"
+        validate: 'visudo -cf %s'
+        backup: yes
